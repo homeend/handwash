@@ -72,6 +72,25 @@ var app = (function () {
     function set_current_component(component) {
         current_component = component;
     }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error('Function called outside component initialization');
+        return current_component;
+    }
+    function createEventDispatcher() {
+        const component = get_current_component();
+        return (type, detail) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail);
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+            }
+        };
+    }
 
     const dirty_components = [];
     const binding_callbacks = [];
@@ -540,15 +559,15 @@ var app = (function () {
     			t4 = text("Start");
     			attr_dev(h2, "bp", "offset-5@md 4@md 12@sm");
     			attr_dev(h2, "class", "svelte-1legwsr");
-    			add_location(h2, file$1, 39, 4, 842);
+    			add_location(h2, file$1, 44, 4, 1029);
     			attr_dev(div0, "bp", "grid");
-    			add_location(div0, file$1, 38, 0, 821);
+    			add_location(div0, file$1, 43, 0, 1008);
     			button.disabled = /*in_progress*/ ctx[0];
     			attr_dev(button, "bp", "offset-5@md 4@md 12@sm");
     			attr_dev(button, "class", "start svelte-1legwsr");
-    			add_location(button, file$1, 47, 4, 1020);
+    			add_location(button, file$1, 52, 4, 1207);
     			attr_dev(div1, "bp", "grid");
-    			add_location(div1, file$1, 46, 0, 999);
+    			add_location(div1, file$1, 51, 0, 1186);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -612,11 +631,12 @@ var app = (function () {
     	return block;
     }
 
-    const total_time = 5;
+    const total_time = 20;
 
     function instance$1($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Timer", slots, []);
+    	const dispatcher = createEventDispatcher();
     	let in_progress = false;
     	let counter = 0;
 
@@ -632,6 +652,7 @@ var app = (function () {
     					clearInterval(interval_id);
     					$$invalidate(0, in_progress = false);
     					$$invalidate(1, counter = 0);
+    					dispatcher("timer_finished", { msg: "time has run out...." });
     				}
     			},
     			1000
@@ -645,10 +666,12 @@ var app = (function () {
     	});
 
     	$$self.$capture_state = () => ({
+    		createEventDispatcher,
     		ProgressBar,
+    		total_time,
+    		dispatcher,
     		in_progress,
     		counter,
-    		total_time,
     		startTimer
     	});
 
@@ -765,8 +788,13 @@ var app = (function () {
     	let a0;
     	let t5;
     	let a1;
+    	let t7;
+    	let audio_1;
+    	let source;
+    	let source_src_value;
     	let current;
     	timer = new Timer({ $$inline: true });
+    	timer.$on("timer_finished", /*timer_finished*/ ctx[1]);
     	howto = new HowTo({ $$inline: true });
 
     	const block = {
@@ -784,16 +812,22 @@ var app = (function () {
     			t5 = space();
     			a1 = element("a");
     			a1.textContent = "Sound Source";
+    			t7 = space();
+    			audio_1 = element("audio");
+    			source = element("source");
     			attr_dev(h1, "class", "svelte-17lkxg");
-    			add_location(h1, file$3, 11, 0, 157);
+    			add_location(h1, file$3, 15, 0, 221);
     			attr_dev(a0, "target", "_blank");
     			attr_dev(a0, "href", "http://awareness.who.int/gpsc/clean_hands_protection/en/");
-    			add_location(a0, file$3, 17, 1, 216);
+    			add_location(a0, file$3, 21, 1, 315);
     			attr_dev(a1, "target", "_blank");
     			attr_dev(a1, "href", "https://freesound.org/people/metrostock99/sounds/345086/");
-    			add_location(a1, file$3, 18, 1, 320);
+    			add_location(a1, file$3, 22, 1, 419);
     			attr_dev(h3, "class", "svelte-17lkxg");
-    			add_location(h3, file$3, 16, 0, 209);
+    			add_location(h3, file$3, 20, 0, 308);
+    			if (source.src !== (source_src_value = "sound.wav")) attr_dev(source, "src", source_src_value);
+    			add_location(source, file$3, 26, 2, 560);
+    			add_location(audio_1, file$3, 25, 1, 531);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -809,6 +843,10 @@ var app = (function () {
     			append_dev(h3, a0);
     			append_dev(h3, t5);
     			append_dev(h3, a1);
+    			insert_dev(target, t7, anchor);
+    			insert_dev(target, audio_1, anchor);
+    			append_dev(audio_1, source);
+    			/*audio_1_binding*/ ctx[2](audio_1);
     			current = true;
     		},
     		p: noop,
@@ -831,6 +869,9 @@ var app = (function () {
     			destroy_component(howto, detaching);
     			if (detaching) detach_dev(t3);
     			if (detaching) detach_dev(h3);
+    			if (detaching) detach_dev(t7);
+    			if (detaching) detach_dev(audio_1);
+    			/*audio_1_binding*/ ctx[2](null);
     		}
     	};
 
@@ -848,14 +889,36 @@ var app = (function () {
     function instance$3($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
+    	let audio;
+
+    	function timer_finished(e) {
+    		audio.play();
+    	}
+
     	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$capture_state = () => ({ Timer, HowTo });
-    	return [];
+    	function audio_1_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			audio = $$value;
+    			$$invalidate(0, audio);
+    		});
+    	}
+
+    	$$self.$capture_state = () => ({ Timer, HowTo, audio, timer_finished });
+
+    	$$self.$inject_state = $$props => {
+    		if ("audio" in $$props) $$invalidate(0, audio = $$props.audio);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [audio, timer_finished, audio_1_binding];
     }
 
     class App extends SvelteComponentDev {

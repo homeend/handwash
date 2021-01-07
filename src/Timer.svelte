@@ -1,8 +1,12 @@
 <script>
+    import {createEventDispatcher} from 'svelte'; 
     import ProgressBar from './ProgressBar.svelte';
+    
+    const total_time = 20;
+    const dispatcher = createEventDispatcher()
+
     let in_progress = false;
     let counter = 0;
-    const total_time = 20;
 
     function startTimer(){
         if(in_progress)
@@ -15,6 +19,7 @@
                 clearInterval(interval_id);
                 in_progress = false;
                 counter = 0;
+                dispatcher('timer_finished', {msg: 'time has run out....'});
             }
 
         }, 1000);
