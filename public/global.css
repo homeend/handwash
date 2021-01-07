@@ -15,8 +15,8 @@ button {
 	outline: none;
 	flex: 1;
 	cursor: pointer;
-  }
-  
-  .sr-only {
+}
+
+.sr-only {
 	display: none;
-  }
+}

@@ -15,6 +15,6 @@
 <HowTo />
 
 <h3>
-	<a href="http://awareness.who.int/gpsc/clean_hands_protection/en/">Picture Source</a>
-	<a href="https://freesound.org/people/metrostock99/sounds/345086/">Sound Source</a>
+	<a target="_blank" href="http://awareness.who.int/gpsc/clean_hands_protection/en/">Picture Source</a>
+	<a target="_blank" href="https://freesound.org/people/metrostock99/sounds/345086/">Sound Source</a>
  </h3>
