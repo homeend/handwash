@@ -27,6 +27,10 @@ var app = (function () {
     function is_empty(obj) {
         return Object.keys(obj).length === 0;
     }
+
+    function append(target, node) {
+        target.appendChild(node);
+    }
     function insert(target, node, anchor) {
         target.insertBefore(node, anchor || null);
     }
@@ -50,6 +54,9 @@ var app = (function () {
     }
     function children(element) {
         return Array.from(element.childNodes);
+    }
+    function set_style(node, key, value, important) {
+        node.style.setProperty(key, value, important ? 'important' : '');
     }
     function custom_event(type, detail) {
         const e = document.createEvent('CustomEvent');
@@ -277,6 +284,10 @@ var app = (function () {
     function dispatch_dev(type, detail) {
         document.dispatchEvent(custom_event(type, Object.assign({ version: '3.31.2' }, detail)));
     }
+    function append_dev(target, node) {
+        dispatch_dev('SvelteDOMInsert', { target, node });
+        append(target, node);
+    }
     function insert_dev(target, node, anchor) {
         dispatch_dev('SvelteDOMInsert', { target, node, anchor });
         insert(target, node, anchor);
@@ -324,25 +335,43 @@ var app = (function () {
     const file = "src\\ProgressBar.svelte";
 
     function create_fragment(ctx) {
-    	let p;
+    	let div2;
+    	let div1;
+    	let div0;
+    	let span;
 
     	const block = {
     		c: function create() {
-    			p = element("p");
-    			p.textContent = "Progress Bar";
-    			add_location(p, file, 0, 0, 0);
+    			div2 = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
+    			span = element("span");
+    			span.textContent = "--%";
+    			attr_dev(span, "clsss", "sr-only");
+    			add_location(span, file, 14, 12, 374);
+    			attr_dev(div0, "class", "progress-bar svelte-nthaca");
+    			set_style(div0, "width", "20%");
+    			add_location(div0, file, 13, 8, 315);
+    			attr_dev(div1, "class", "progress-container svelte-nthaca");
+    			attr_dev(div1, "bp", "offset-5@md 4@md 12@sm");
+    			add_location(div1, file, 12, 4, 245);
+    			attr_dev(div2, "bp", "grid");
+    			add_location(div2, file, 11, 0, 224);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, p, anchor);
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div1);
+    			append_dev(div1, div0);
+    			append_dev(div0, span);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(p);
+    			if (detaching) detach_dev(div2);
     		}
     	};
 
@@ -387,27 +416,43 @@ var app = (function () {
     const file$1 = "src\\Timer.svelte";
 
     function create_fragment$1(ctx) {
-    	let p;
+    	let div;
+    	let h2;
     	let t1;
     	let progressbar;
+    	let t2;
+    	let button;
     	let current;
     	progressbar = new ProgressBar({ $$inline: true });
 
     	const block = {
     		c: function create() {
-    			p = element("p");
-    			p.textContent = "Timer";
+    			div = element("div");
+    			h2 = element("h2");
+    			h2.textContent = "Seconds Left:";
     			t1 = space();
     			create_component(progressbar.$$.fragment);
-    			add_location(p, file$1, 4, 0, 76);
+    			t2 = space();
+    			button = element("button");
+    			button.textContent = "Start";
+    			attr_dev(h2, "bp", "offset-5@md 4@md 12@sm");
+    			attr_dev(h2, "class", "svelte-iukc0f");
+    			add_location(h2, file$1, 16, 4, 268);
+    			attr_dev(div, "bp", "grid");
+    			add_location(div, file$1, 15, 0, 247);
+    			attr_dev(button, "class", "start svelte-iukc0f");
+    			add_location(button, file$1, 23, 0, 366);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, p, anchor);
+    			insert_dev(target, div, anchor);
+    			append_dev(div, h2);
     			insert_dev(target, t1, anchor);
     			mount_component(progressbar, target, anchor);
+    			insert_dev(target, t2, anchor);
+    			insert_dev(target, button, anchor);
     			current = true;
     		},
     		p: noop,
@@ -421,9 +466,11 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(p);
+    			if (detaching) detach_dev(div);
     			if (detaching) detach_dev(t1);
     			destroy_component(progressbar, detaching);
+    			if (detaching) detach_dev(t2);
+    			if (detaching) detach_dev(button);
     		}
     	};
 
@@ -470,25 +517,34 @@ var app = (function () {
     const file$2 = "src\\HowTo.svelte";
 
     function create_fragment$2(ctx) {
-    	let p;
+    	let div;
+    	let img;
+    	let img_src_value;
 
     	const block = {
     		c: function create() {
-    			p = element("p");
-    			p.textContent = "How To";
-    			add_location(p, file$2, 0, 0, 0);
+    			div = element("div");
+    			img = element("img");
+    			if (img.src !== (img_src_value = "handwash.gif")) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "bp", "offset-5@md 4@md 12@sm");
+    			attr_dev(img, "alt", "How to wash your hands");
+    			attr_dev(img, "class", "svelte-wwxt9");
+    			add_location(img, file$2, 7, 4, 83);
+    			attr_dev(div, "bp", "grid");
+    			add_location(div, file$2, 6, 0, 61);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, p, anchor);
+    			insert_dev(target, div, anchor);
+    			append_dev(div, img);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(p);
+    			if (detaching) detach_dev(div);
     		}
     	};
 
@@ -538,6 +594,11 @@ var app = (function () {
     	let timer;
     	let t2;
     	let howto;
+    	let t3;
+    	let h3;
+    	let a0;
+    	let t5;
+    	let a1;
     	let current;
     	timer = new Timer({ $$inline: true });
     	howto = new HowTo({ $$inline: true });
@@ -550,8 +611,21 @@ var app = (function () {
     			create_component(timer.$$.fragment);
     			t2 = space();
     			create_component(howto.$$.fragment);
-    			attr_dev(h1, "class", "svelte-1s5foe9");
-    			add_location(h1, file$3, 11, 0, 153);
+    			t3 = space();
+    			h3 = element("h3");
+    			a0 = element("a");
+    			a0.textContent = "Picture Source";
+    			t5 = space();
+    			a1 = element("a");
+    			a1.textContent = "Sound Source";
+    			attr_dev(h1, "class", "svelte-17lkxg");
+    			add_location(h1, file$3, 11, 0, 157);
+    			attr_dev(a0, "href", "http://awareness.who.int/gpsc/clean_hands_protection/en/");
+    			add_location(a0, file$3, 17, 1, 216);
+    			attr_dev(a1, "href", "https://freesound.org/people/metrostock99/sounds/345086/");
+    			add_location(a1, file$3, 18, 1, 304);
+    			attr_dev(h3, "class", "svelte-17lkxg");
+    			add_location(h3, file$3, 16, 0, 209);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -562,6 +636,11 @@ var app = (function () {
     			mount_component(timer, target, anchor);
     			insert_dev(target, t2, anchor);
     			mount_component(howto, target, anchor);
+    			insert_dev(target, t3, anchor);
+    			insert_dev(target, h3, anchor);
+    			append_dev(h3, a0);
+    			append_dev(h3, t5);
+    			append_dev(h3, a1);
     			current = true;
     		},
     		p: noop,
@@ -582,6 +661,8 @@ var app = (function () {
     			destroy_component(timer, detaching);
     			if (detaching) detach_dev(t2);
     			destroy_component(howto, detaching);
+    			if (detaching) detach_dev(t3);
+    			if (detaching) detach_dev(h3);
     		}
     	};
 
