@@ -416,43 +416,49 @@ var app = (function () {
     const file$1 = "src\\Timer.svelte";
 
     function create_fragment$1(ctx) {
-    	let div;
+    	let div0;
     	let h2;
     	let t1;
     	let progressbar;
     	let t2;
+    	let div1;
     	let button;
     	let current;
     	progressbar = new ProgressBar({ $$inline: true });
 
     	const block = {
     		c: function create() {
-    			div = element("div");
+    			div0 = element("div");
     			h2 = element("h2");
     			h2.textContent = "Seconds Left:";
     			t1 = space();
     			create_component(progressbar.$$.fragment);
     			t2 = space();
+    			div1 = element("div");
     			button = element("button");
     			button.textContent = "Start";
     			attr_dev(h2, "bp", "offset-5@md 4@md 12@sm");
     			attr_dev(h2, "class", "svelte-iukc0f");
     			add_location(h2, file$1, 16, 4, 268);
-    			attr_dev(div, "bp", "grid");
-    			add_location(div, file$1, 15, 0, 247);
+    			attr_dev(div0, "bp", "grid");
+    			add_location(div0, file$1, 15, 0, 247);
+    			attr_dev(button, "bp", "offset-5@md 4@md 12@sm");
     			attr_dev(button, "class", "start svelte-iukc0f");
-    			add_location(button, file$1, 23, 0, 366);
+    			add_location(button, file$1, 24, 4, 387);
+    			attr_dev(div1, "bp", "grid");
+    			add_location(div1, file$1, 23, 0, 366);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, h2);
+    			insert_dev(target, div0, anchor);
+    			append_dev(div0, h2);
     			insert_dev(target, t1, anchor);
     			mount_component(progressbar, target, anchor);
     			insert_dev(target, t2, anchor);
-    			insert_dev(target, button, anchor);
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, button);
     			current = true;
     		},
     		p: noop,
@@ -466,11 +472,11 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(div0);
     			if (detaching) detach_dev(t1);
     			destroy_component(progressbar, detaching);
     			if (detaching) detach_dev(t2);
-    			if (detaching) detach_dev(button);
+    			if (detaching) detach_dev(div1);
     		}
     	};
 
