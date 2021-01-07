@@ -2,7 +2,7 @@
     import ProgressBar from './ProgressBar.svelte';
     let in_progress = false;
     let counter = 0;
-    const total_time = 5;
+    const total_time = 20;
 
     function startTimer(){
         if(in_progress)
